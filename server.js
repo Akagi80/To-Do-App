@@ -18,11 +18,11 @@ io.on('connection', (socket) => {
   console.log('New client! Its id – ' + socket.id);
 
   // Nasłuchiwacz na zdarzenie addTack dodające  dane - nazwę taska (taskName),
-  socket.on('addTask', (taskName) => {
-    tasks.push(taskName);
-    console.log('Add new task: ', taskName)
+  socket.on('addTask', ({id, name}) => {
+    tasks.push({id, name});
+    console.log('Add new task: ', {id, name})
     // Serwer emituje powyzsze zdarzenie do wszystkich urzytkowników poza tym który je inicjował (broadcast)
-    socket.broadcast.emit('addTask', taskName);
+    socket.broadcast.emit('addTask', {id, name});
   });
 
   // Nasłuchiwacz na zdarzenie removeTack usuwające dane wskazane przez urzytkownika (deleteTask),

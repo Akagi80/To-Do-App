@@ -1,5 +1,6 @@
 import React from 'react';
 import io from 'socket.io-client';
+import { v4 as uuidv4 } from 'uuid';
 
 class App extends React.Component {
 
@@ -16,14 +17,14 @@ class App extends React.Component {
      this.socket.on('updateData', (data) => this.updateTasks(data));
   };
 
-  removeTask = (id) => {
-    this.setState({tasks: this.state.tasks.filter(task => task.id !== id)});
-    this.socket.emit('removeTask', id);
+  removeTask = (id, local) => {
+    this.setState({ tasks: this.state.tasks.filter(task => task.id !== id) });
+    if (local) this.socket.emit('removeTask', id);
   };
 
   submitForm = (event) => {
     event.preventDefault();
-    const addNewTask = {name: this.state.taskName};
+    const addNewTask = {id: uuidv4(), name: this.state.taskName};
     this.addTask(addNewTask);
     this.socket.emit('addTask', addNewTask);
     this.setState({taskName: ''});
